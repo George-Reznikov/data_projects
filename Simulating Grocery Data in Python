@@ -1,0 +1,43 @@
+import pandas as pd
+import numpy as np
+import random
+
+# Set random seed for reproducibility
+np.random.seed(42)
+
+# Sample data parameters
+stores = [f"Store_{i}" for i in range(1, 6)]
+categories = ["Produce", "Dairy", "Bakery", "Grocery", "Beverages"]
+vendors = ["Vendor_A", "Vendor_B", "Vendor_C", "Vendor_D"]
+products = {
+    "Produce": ["Avocados", "Bananas", "Tomatoes", "Lettuce", "Oranges"],
+    "Dairy": ["Milk", "Cheese", "Yogurt", "Butter", "Cream"],
+    "Bakery": ["Bread", "Croissant", "Muffin", "Bagel", "Cake"],
+    "Grocery": ["Rice", "Pasta", "Cereal", "Olive Oil", "Canned Beans"],
+    "Beverages": ["Soda", "Juice", "Water", "Coffee", "Tea"]
+}
+
+# Date range
+date_range = pd.date_range(start="2024-01-01", end="2024-03-31", freq="D")
+
+# Create synthetic dataset
+data = []
+for date in date_range:
+    for store in stores:
+        for category in categories:
+            for product in products[category]:
+                vendor = random.choice(vendors)
+                units_sold = np.random.randint(5, 50)
+                unit_price = round(np.random.uniform(1, 10), 2)
+                cost_per_unit = round(unit_price * np.random.uniform(0.5, 0.8), 2)
+                promo_flag = "Yes" if (product == "Avocados" and date >= pd.Timestamp("2024-02-15") and date <= pd.Timestamp("2024-02-28")) else "No"
+                data.append([date, store, category, product, vendor, units_sold, unit_price, cost_per_unit, promo_flag])
+
+# Create DataFrame
+df = pd.DataFrame(data, columns=["Date", "Store_ID", "Category", "Product_Name", "Vendor", "Units_Sold", "Unit_Price", "Cost_Per_Unit", "Promo_Flag"])
+
+# Save sample dataset
+file_path = "/mnt/data/sample_grocery_data.csv"
+df.to_csv(file_path, index=False)
+
+file_path
